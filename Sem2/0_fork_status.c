@@ -4,7 +4,8 @@
 #include <sys/types.h>
 #include <stdio.h>
 
-int main() {
+int main()
+{
 	pid_t pid;
   int status, died;
   switch(pid = fork())
@@ -17,6 +18,6 @@ int main() {
 			break;
   	default:
 			wait(&status); // this is the code the parent runs
-   	}
-	return 0;
+	}
+		return 0;
 }
