@@ -20,6 +20,7 @@
 int main(int argc, char* argv[])
 {
   pid_t pid = 1;
+  int ch = 1;
   int i = 0, j = 0;
   char c;
   int ret_code = 0;
@@ -30,7 +31,7 @@ int main(int argc, char* argv[])
   char* arg[100];
   for(i = 0; i < 100; ++i)
   {
-    arg[i] = (char*)malloc(100*sizeof(char)) ;
+    arg[i] = (char*)malloc(100*sizeof(char));
   }
   char t;
   while(tolower(ret) != 'n')
@@ -41,6 +42,10 @@ int main(int argc, char* argv[])
         execvp(adr, arg);
         return 0;
       default:
+        if(arg[i + 1] == NULL)
+          arg[i + 1] = (char*)malloc(100*sizeof(char));
+        if(arg[i] == NULL)
+            arg[i] = (char*)malloc(100*sizeof(char));
         i = 0;
         j = 0;
         printf("Enter address, enter quit for exit\n");
@@ -48,24 +53,35 @@ int main(int argc, char* argv[])
         if(strcmp(adr, "quit") == 0)
           return 0;
         args_num = argc;
-        printf("Enter arguments (including name) without line breaks\n");
+        printf("Enter arguments without line breaks\n");
         c = getchar();
         c = getchar();
-        for(j = 0; c != '\n'; ++j)
+        if(c != '\n')
         {
-          if(c == ' ')
+          for(j = 0; c != '\n'; ++j)
           {
-            *(arg[i] + j) = '\0';
-            ++i;
-            j = 0;
+            if(c == ' ' && ch)
+            {
+              *(arg[i] + j) = '\0';
+              ++i;
+              j = 0;
+              ch = 0;
+            }
+            if(c != ' ')
+            {
+              ch = 1;
+              *(arg[i] + j) = c;
+            }
+            c = getchar();
           }
-          else
-          {
-            *(arg[i] + j) = c;
-          }
-          c = getchar();
+          free(arg[i + 1]);
+          arg[i + 1] = NULL;
         }
-        arg[i + 1] = NULL;
+        else
+        {
+          free(arg[i]);
+          arg[i] = NULL;
+        }
         pid = fork();
         if(pid == -1)
         {
