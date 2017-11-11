@@ -18,7 +18,6 @@ int main()
   char path[] = "ms1.cpp";
   key_t key;
   int i = 0, len = 0;
-  cout << sizeof(string) << endl;
   struct mymsgbuf
   {
     long type;
@@ -51,7 +50,7 @@ int main()
       msgctl(id, IPC_RMID, NULL);;
       exit(-1);
     }
-    if (msgsnd(id, &mybuf, sizeof(mybuf.text), 0) < 0)
+    if (msgsnd(id, &mybuf, len, 0) < 0)
     {
       msgctl(id, IPC_RMID, NULL);
       exit(-1);
